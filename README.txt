@@ -13,6 +13,11 @@ this part is open-source.
 Currently, its possible to run a lightweight version of makemkv using the
 linux emulation layer under FreeBSD10.
 
+-------------
+Requirements:
+-------------
+1. the linux emulation layer for freebsd (see https://www.freebsd.org/doc/handbook/linuxemu-lbc-install.html)
+
 ----------------------------------
 How to install linux-makemkv-lite:
 ----------------------------------
