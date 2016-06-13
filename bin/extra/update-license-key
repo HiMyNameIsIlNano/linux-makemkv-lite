@@ -18,7 +18,10 @@ while [ "$1" != "" ]; do
     shift
 done
 
-makemkv_settingsfile = ENV['HOME'] + "/.MakeMKV/settings.conf"
-new_line = "app_Key = \"#{get_makemkv_beta_key}\"\n"
+makemkv_settingsfile="/root/.MakeMKV/settings.conf"
 url="http://www.makemkv.com/forum2/viewtopic.php?f=5&t=1053"
 
+key=$(curl -s ${url} | grep -o "<div class=\"codecontent\">.*</div>" | cut -d '<' -f 2 | cut -d '>' -f 2)
+echo "Key has been retrieved: " ${key}
+new_line="app_Key = \"${key}\"" 
+echo ${new_line} > ${makemkv_settingsfile}
