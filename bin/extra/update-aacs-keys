@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# Start functions
+# Print out the help
+usage(){
+    echo "usage: update-aacs-keys | [[-h]]"
+}
+# End functions 
+
+LINUXBASE=/compat/linux
+PREFIX=usr
+
+while [ "$1" != "" ]; do
+    case $1 in
+        -h | --help )           usage
+                                exit
+                                ;;
+        * )                     usage
+                                exit 1
+    esac
+    shift
+done
+
+# decryption keys to be fetched from http://vlc-bluray.whoknowsmy.name/
+echo "Fetching new AACS Keys..."
+curl -o /tmp/KEYDB.cfg http://www.labdv.com/aacs/KEYDB.cfg
+cp /tmp/KEYDB.cfg $LINUXBASE/$PREFIX/share/MakeMKV/KEYDB.cfg
+
+mkdir -p /root/.MakeMKV && cp /tmp/KEYDB.cfg /root/.MakeMKV/KEYDB.cfg
+
+

@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Start functions
+# Print out the help
+usage(){
+    echo "usage: update-license-keys | [[-h]]"
+}
+# End functions 
+
+while [ "$1" != "" ]; do
+    case $1 in
+        -h | --help )           usage
+                                exit
+                                ;;
+        * )                     usage
+                                exit 1
+    esac
+    shift
+done
+
+makemkv_settingsfile = ENV['HOME'] + "/.MakeMKV/settings.conf"
+new_line = "app_Key = \"#{get_makemkv_beta_key}\"\n"
+url="http://www.makemkv.com/forum2/viewtopic.php?f=5&t=1053"
+

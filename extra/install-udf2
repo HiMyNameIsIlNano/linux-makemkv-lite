@@ -1,0 +1,54 @@
+#!/bin/sh
+
+ARCH=$(uname -m)
+KERNEL_NAME=$(uname -i)
+TIMESTAMP=$(date +%s)
+KERNEL_NAME_BAK="$KERNEL_NAME-$TIMESTAMP"
+
+# Install UDF2 support
+echo *******************************
+echo *** Installing UDF2 support ***
+echo *******************************
+pkg install git
+
+if [ ! -d "/tmp/UDF" ]; then
+	echo Cloning UDF2 git repo
+	cd /tmp
+	git clone https://github.com/waitman/UDF.git
+fi
+
+echo Backing-up $KERNEL_NAME kernel to $KERNEL_NAME_BAK 
+cd /usr/src/sys/$ARCH/conf
+cp $KERNEL_NAME $KERNEL_NAME_BAK
+
+echo Press any key to continue...
+read dummy
+
+echo Patching the system
+cd /usr/src && patch < /tmp/UDF/driver_current.patch
+# udfio.h gets created under /usr/src/udfio.h
+
+echo Press any key to continue...
+read dummy
+
+if [ ! -e "/usr/include/sys/udfio.h" ];
+  then	
+	echo Copying udfio.h to /usr/include/sys/udfio.h	
+	cp /usr/src/udfio.h /usr/include/sys/udfio.h
+	echo Copying udfio.h to /usr/src/sys/sys/udfio.h	
+	cp /usr/src/udfio.h /usr/src/sys/sys/udfio.h	
+fi
+
+echo Press any key to continue...
+read dummy
+
+make buildkernel KERNCONF=$KERNEL_NAME
+echo Press any key to continue...
+read dummy
+
+cd /usr/src/sbin/mount && make && make install
+
+echo Press any key to continue...
+read dummy
+
+cd /tmp/UDF/ && make && make install

@@ -1,0 +1,64 @@
+#!/bin/sh
+#
+# Depends on mpv/mplayer.
+#
+# Revision History:
+#
+# 26-MAY-2016:  Initial release.
+#
+ 
+# Begin functions
+# Print out the help
+usage(){
+    echo "usage: play-stream [-fp value] | [[-h]]"
+}
+# End functions 
+
+INSTALL_PATH=/usr/local/bin
+FP_FLAG=0
+TIMESTAMP=$(date +%s)
+LOG_FILE="make_mkv-$TIMESTAMP"
+
+while [ "$1" != "" ]; do
+    case $1 in
+        -fp | --force-player )	shift
+                                PLAYER=$1
+				FP_FLAG=1
+                                ;;
+        -h | --help )           usage
+                                exit
+                                ;;
+        * )                     usage
+                                exit 1
+    esac
+    shift
+done
+
+if [ -e $INSTALL_PATH/mplayer -a $FP_FLAG == 0 ] || [ $FP_FLAG == 1 -a $PLAYER == mplayer ]
+then
+	#mplayer -fs -demuxer lavf -vo vdpau:hqscaling=1 -vc ffmpeg12vdpau,ffh264vdpau,ffvc1vdpau,ffwmv3vdpau, \
+	#-vfm ffmpeg, -ao pulse -ac fftruehd,ffdca,ffeac3,ffac3,fflpcm, -afm ffmpeg, -alang en -slang en \
+	#-forcedsubsonly -channels 6 -af volnorm -cache 8192 -dvd-device /dev/cd0 \
+	#http://localhost:51000/stream/title0.ts 
+
+	mplayer -fs -demuxer lavf -vo x11 -vc ffmpeg12vdpau,ffh264vdpau,ffvc1vdpau,ffwmv3vdpau, \
+	-vfm ffmpeg, -ac fftruehd,ffdca,ffeac3,ffac3,fflpcm, -afm ffmpeg, -alang en -slang en \
+	-forcedsubsonly -channels 6 -af volnorm -cache 8192 \
+	http://localhost:51000/stream/title0.ts > /tmp/$LOG_FILE
+
+	exit 0 
+fi
+
+if [ -e $INSTALL_PATH/mpv -a $FP_FLAG == 0 ] || [ $FP_FLAG == 1 -a $PLAYER == mpv ]
+then
+	mpv --vo x11 --demuxer-lavf-probesize=1000 --demuxer-lavf-buffersize=16000 \
+	http://localhost:51000/stream/title0.ts > /tmp/$LOG_FILE
+	
+	exit 0
+fi
+
+# It the script reaches this statements it means that none of the two above mentioned multimedia players is installed
+echo "No media player was found. Please consder installing either mplayer or mpv or feel free to extend the support of this script to your favourite media player."
+
+# Shut down MakeMKV after Mplayer closes.
+# killall makemkvcon

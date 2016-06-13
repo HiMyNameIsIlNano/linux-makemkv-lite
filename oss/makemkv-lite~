@@ -1,0 +1,76 @@
+#!/bin/sh
+#
+# Original Source: http://wiki.indie-it.com/wiki/Blu-Ray
+#
+# Cross-Platform Blu-ray Playback Script
+# Release 0.0
+#
+# Depends on having curl, MakeMKV and mplayer installed.
+#
+# Revision History:
+#
+# 26-MAY-2016:  Initial release.
+#
+ 
+# Begin functions
+# Print out the help
+usage(){
+    echo "usage: makemkv-lite -s SRC_FOLDER | [[-h]]"
+}
+# End functions 
+
+MKV_PATH=/compat/linux/usr/bin
+S_FLAG=0
+
+while [ "$1" != "" ]; do
+    case $1 in
+        -s | --source-folder )	shift
+                                SRC_FOLDER=$1
+				S_FLAG=1
+                                ;;
+        -h | --help )           usage
+                                exit
+                                ;;
+        * )                     usage
+                                exit 1
+    esac
+    shift
+done
+
+if [ $S_FLAG == 0 ] 
+then
+  echo Please specify the folder where the Blu Ray disc has been mounted
+  usage	 
+  exit 1	
+fi
+
+if [ ! -e $MKV_PATH/makemkvcon ]
+then
+  echo Install MakeMKV first!
+  exit 1
+fi
+
+# Make sure we're not already decoding a disc.
+killall makemkvcon
+
+# Start streaming the Blu-ray mounted under the given path.
+# Assume the main title (chapter 1) must be at least 80 minutes (4800s) long
+makemkvcon --upnp=1 --cache=128 stream file:$SRC_FOLDER &
+ 
+# Wait for the streaming server to be ready.
+RESULT=1
+COUNT=0
+while [ $RESULT != 0 ]; do
+ curl -f http://localhost:51000 -o /dev/null 2> /dev/null
+ RESULT=$?
+ sleep 1
+ # Handle timeouts so we don't leave orphan makemkvcon tasks running.
+ # Wait at least 5 minutes (300s) for the right title to be found
+ COUNT=$((COUNT + 1))
+ if [ $COUNT == 300 ]; then
+  killall makemkvcon
+  exit 1
+ fi
+done
+
+echo The stream is ready to be played with your favourite video player now...

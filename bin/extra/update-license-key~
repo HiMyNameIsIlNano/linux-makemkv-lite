@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Start functions
+# Print out the help
+usage(){
+    echo "usage: update-license-keys | [[-h]]"
+}
+# End functions 
+
+while [ "$1" != "" ]; do
+    case $1 in
+        -h | --help )           usage
+                                exit
+                                ;;
+        * )                     usage
+                                exit 1
+    esac
+    shift
+done
+
+
