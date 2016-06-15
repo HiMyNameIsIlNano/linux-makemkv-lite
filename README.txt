@@ -36,12 +36,12 @@ How-to run linux-makemkv-lite:
 4. as a normal user it is now possible to run play-stream -fp mpv (i.e. it forces the usage of the media player "mpv").
 
 -------------------------------
-How-to run update the beta key:
+How-to update the beta key:
 -------------------------------
 1. as root run update-license-key;
 
 ----------------------------------------
-How-to run update the aacs key database:
+How-to update the aacs key database:
 ----------------------------------------
 1. as root run update-aacs-key;
 
