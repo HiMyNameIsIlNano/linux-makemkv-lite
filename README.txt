@@ -24,7 +24,7 @@ How to install linux-makemkv-lite:
 1. Download the zip file from https://github.com/HiMyNameIsIlNano/linux-makemkv-lite/archive/master.zip 
 (e.g. curl https://github.com/HiMyNameIsIlNano/linux-makemkv-lite/archive/master.zip -o /tmp/linux-makemkv-lite.zip);
 2. Unzip it (e.g. under /tmp/linux-makemkv-lite);
-3. as root cd intto linux-makemkv-lite/extra and run ./install-udf2;
+3. as root cd into linux-makemkv-lite/extra and run ./install-udf2;
 4. as root cd into linux-makemkv-lite and run "./install-makemkv-lite -s /path/to/unzipped/linux-makemkv-lite".
 
 ------------------------------

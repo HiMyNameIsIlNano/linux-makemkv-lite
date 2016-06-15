@@ -5,6 +5,12 @@ KERNEL_NAME=$(uname -i)
 TIMESTAMP=$(date +%s)
 KERNEL_NAME_BAK="$KERNEL_NAME-$TIMESTAMP"
 
+if [ -e "/sbin/mount_udf2" ];
+  then	
+	echo The support for udf2 formatted discs has already been installed
+	exit 0
+fi
+
 # Install UDF2 support
 echo *******************************
 echo *** Installing UDF2 support ***

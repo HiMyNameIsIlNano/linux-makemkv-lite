@@ -1,4 +1,0 @@
-how to install:
-
-1. cd to linux-makemkv-lite/extra and run ./install-udf2 as root
-2. cd to linux-makemkv-lite and run "./install-makemkv-lite -s /path/to/unzipped/linux-makemkv-lite" as root
